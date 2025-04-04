@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Love Animation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: radial-gradient(circle, #ff99cc 0%, #ff66b2 100%);
+      overflow: auto;
+      font-family: 'Arial', sans-serif;
+      transition: background 1s;
+      flex-direction: column;
+    }
+    
+    .love-container {
+      position: relative;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .love-text {
+      font-size: clamp(60px, 15vw, 120px);
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 0 20px #ff0000, 0 0 40px #ff69b4;
+      margin-bottom: 30px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .love-text:hover {
+      transform: scale(1.05);
+    }
+    
+    .heart {
+      position: absolute;
+      color: #ff3366;
+      font-size: 30px;
+      animation: rise 4s linear forwards;
+      pointer-events: none;
+    }
+    
+    @keyframes rise {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-200px) scale(0.5); opacity: 0; }
+    }
+    
+    .heart-btn {
+      padding: 15px 30px;
+      font-size: clamp(16px, 4vw, 18px);
+      background: linear-gradient(45deg, #ff3366, #ff1493);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+      margin: 10px auto;
+    }
+    
+    .heart-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(255, 20, 147, 0.8);
+    }
+    
+    .book-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 800px;
+      height: 500px;
+      display: none;
+      z-index: 100;
+    }
+    
+    .book-pages {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border: 5px solid #ff3366;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+      overflow: hidden;
+    }
+    
+    .page {
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    .page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .nav-buttons {
+      position: fixed;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 101;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .nav-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #ff3366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .nav-btn:hover {
+      background: #ff1493;
+      transform: scale(1.05);
+    }
+    
+    .letter-content {
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+.letter-wrapper {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 100;
+    }
+    
+    .letter-container {
+      width: 95%;
+      max-width: 800px;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+      text-align: center;
+    }
+    
+    .letter-footer {
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .book-pages {
+        flex-direction: column;
+      }
+      .book-pages img {
+        width: 100%;
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="love-container" id="loveContainer">
+    <div class="love-text" id="loveText">LOVE</div>
+      <h2>Anh có yêu em ko?</h2>
+    <button class="heart-btn" id="heartBtn">Bấm vào đây nếu anh yêu em</button>
+  </div>
+  
+  <div class="book-container" id="bookContainer">
+    <div class="book-pages">
+      <div class="page">
+        <img src="https://i.imgur.com/i1EjPAV.jpg" alt="Left Page">
+      </div>
+      <div class="page">
+        <img src="https://i.imgur.com/KAs4ANT.jpg" alt="Right Page">
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons" id="navButtons" style="display: none;">
+    <button class="nav-btn" id="backToLove">Quay lại</button>
+    <button class="nav-btn" id="toLetter">Tiếp theo</button>
+  </div>
+  
+  <div class="letter-wrapper" id="letterWrapper">
+    <div class="letter-container" id="letterContainer">
+      <div class="letter-content">
+         <h2 style="font-size: 28px; color: #ff3366; margin-bottom: 20px; text-align: left;">Gửi anh, người em yêu nhất...</h2>
+      
+      <p style="font-size: 16px; line-height: 1.8; margin-bottom: 15px; text-align: left;">
+        Từ khi có anh, thế giới của em ngập tràn hạnh phúc. Mỗi cái ôm của anh giúp mọi mệt mỏi trong em tan biến, 
+        một nụ cười dịu dàng và những lời động viên an ủi khi em buồn, và điều đặc biệt nhất chính là cách anh nhìn em 
+        bằng ánh mắt dịu dàng nhất trên đời.
+      </p>
+      
+      <p style="font-size: 16px; font-weight: bold; margin: 25px 0; text-align: left;">
+        Anh là món quà tuyệt vời nhất cuộc đời em.
+      </p>
+      
+      <p style="font-size: 16px; margin-bottom: 10px; text-align: left;">Em yêu những khoảnh khắc:</p>
+      
+      <ul style="font-size: 16px; line-height: 2; margin-left 60px; list-style-type: none; text-align: left;">
+        <li>❤️ Khi anh âu yếm gọi em bằng biệt danh ngọt ngào</li>
+        <li>❤️ Khi hai ta trao nhau những nụ hôn ngọt ngào</li>
+        <li>❤️ Khi chúng ta ôm nhau ngủ</li>
+      </ul>
+      
+      <p style="font-size: 16px; line-height: 1.8; margin: 25px 0; text-align: left;">
+        Em chỉ muốn mãi được nép vào lòng anh, yêu anh nhiều hơn. Em muốn cùng anh viết tiếp câu chuyện tình yêu này - 
+        một câu chuyện không có hồi kết, nơi mỗi ngày qua đi lại thêm ngọt ngào hơn ngày hôm trước. 
+        Cảm ơn anh vì đã là người đặc biệt nhất trong cuộc đời em!
+      </p>
+      
+      <div style="margin-top: 30px; text-align: left;">
+        <p style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">Yêu anh,</p>
+        <p style="font-size: 16px;">Hôm nay, ngày mai và mãi mãi...</p>
+       </div>
+      </div>
+    </div>
+    <div class="letter-footer">
+      <button class="nav-btn" id="backToBook">Quay lại</button>
+    </div>
+  </div>
+  
+  <script>
+    // Hiệu ứng trái tim
+    document.getElementById("loveText").addEventListener("click", () => {
+      document.getElementById("loveText").innerHTML = "❤️";
+      
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          let heart = document.createElement("div");
+          heart.classList.add("heart");
+          heart.innerHTML = "❤️";
+          heart.style.left = Math.random() * window.innerWidth + "px";
+          heart.style.top = window.innerHeight + "px";
+          document.body.appendChild(heart);
+          
+          setTimeout(() => {
+            heart.remove();
+          }, 4000);
+        }, i * 100);
+      }
+      
+      setTimeout(() => {
+        document.getElementById("loveText").innerHTML = "LOVE";
+      }, 3000);
+    });
+    
+    // Chuyển trang
+    function fadeOut(element, callback) {
+      element.style.opacity = '0';
+      setTimeout(() => {
+        element.style.display = 'none';
+        if (callback) callback();
+      }, 300);
+    }
+    
+    function fadeIn(element) {
+      element.style.display = 'block';
+      setTimeout(() => {
+        element.style.opacity = '1';
+      }, 10);
+    }
+    
+    document.getElementById("heartBtn").addEventListener("click", () => {
+      fadeOut(document.getElementById("loveContainer"), () => {
+        fadeIn(document.getElementById("bookContainer"));
+        document.getElementById("navButtons").style.display = "flex";
+      });
+    });
+    
+    document.getElementById("backToLove").addEventListener("click", () => {
+      fadeOut(document.getElementById("bookContainer"), () => {
+        fadeIn(document.getElementById("loveContainer"));
+        document.getElementById("navButtons").style.display = "none";
+      });
+    });
+    
+    document.getElementById("toLetter").addEventListener("click", () => {
+      fadeOut(document.getElementById("bookContainer"), () => {
+        fadeIn(document.getElementById("letterWrapper"));
+        document.getElementById("navButtons").style.display = "none";
+      });
+    });
+    
+    document.getElementById("backToBook").addEventListener("click", () => {
+      fadeOut(document.getElementById("letterWrapper"), () => {
+        fadeIn(document.getElementById("bookContainer"));
+        document.getElementById("navButtons").style.display = "flex";
+      });
+    });
+
+  </script>
+</body>
+</html>
